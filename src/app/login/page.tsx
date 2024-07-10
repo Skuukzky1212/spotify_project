@@ -1,7 +1,5 @@
 import { ClientSafeProvider, getProviders } from "next-auth/react";
 import SignIn from "../components/SignIn";
-import { redirect } from "next/navigation";
-
 import Image from "next/image";
 import spotifyLogo from "../assets/spotify-logo.png";
 
