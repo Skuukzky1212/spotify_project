@@ -49,9 +49,7 @@ const jwtCallBack: CallbacksOptions["jwt"] = async ({ token, account, user }) =>
     console.log("Token still valid! return extended token: ", token);
     return token;
   }
-
   // else, token has expire, please refresh it!
-
   return await refreshAccessToken(token as ExtendedToken);
 };
 
