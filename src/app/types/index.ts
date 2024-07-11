@@ -1,5 +1,6 @@
 import { User, Session } from "next-auth";
 import { JWT } from "next-auth/jwt";
+import { Dispatch } from "react";
 
 declare module "next-auth" {
   interface Session {
@@ -37,3 +38,44 @@ export interface IPlaylistContext {
     updatedObj: Partial<PlaylistContextState>
   ) => void;
 }
+
+export interface SongContextState {
+  selectedSongId?: string;
+  selectedSong: SpotifyApi.TrackObjectFull | null;
+  isPlaying: boolean;
+  volume: number;
+  deviceId: string | null;
+}
+
+export interface ISongContext {
+  songContextState: SongContextState;
+  dispatchSongAction: Dispatch<SongReducerAction>;
+}
+
+// reducer
+export enum SongReducerActionType {
+  SetDevice = "SetDevice",
+  ToggleIsPlaying = "ToggleIsPlaying",
+  SetCurrentPlayingSong = "SetCurrentPlayingSong",
+  SetVolume = "SetVolume",
+}
+export type SongReducerAction =
+  | {
+      type: SongReducerActionType.SetDevice;
+      payload: Pick<SongContextState, "deviceId" | "volume">;
+    }
+  | {
+      type: SongReducerActionType.ToggleIsPlaying;
+      payload: boolean;
+    }
+  | {
+      type: SongReducerActionType.SetCurrentPlayingSong;
+      payload: Pick<
+        SongContextState,
+        "selectedSong" | "selectedSongId" | "isPlaying"
+      >;
+    }
+  | {
+      type: SongReducerActionType.SetVolume;
+      payload: number;
+    };
