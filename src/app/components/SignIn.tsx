@@ -3,9 +3,8 @@ import { BuiltInProviderType } from "next-auth/providers/index";
 import { LiteralUnion, signIn } from "next-auth/react";
 interface providers {
   providerId: LiteralUnion<BuiltInProviderType, string>;
-  providerName: string;
 }
-const SignIn = ({ providerId, providerName }: providers) => {
+const SignIn = ({ providerId }: providers) => {
   return (
     <button
       className="text-[16px] font-[500] bg-[#18d860] border-2 border-[transparent] text-white px-5 py-4 rounded-full hover:border-white transition-all"
@@ -13,7 +12,7 @@ const SignIn = ({ providerId, providerName }: providers) => {
         signIn(providerId, { callbackUrl: "/" });
       }}
     >
-      Login with {providerName ? providerName : ""}!
+      Login with Spotify!
     </button>
   );
 };

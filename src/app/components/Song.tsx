@@ -12,11 +12,14 @@ const Song = ({ item: { track }, itemIndex }: Props) => {
   const {
     playlistContextState: { selectedPlaylist },
   } = usePlaylistContext();
+
   const spotifyApi = useSpotify();
+  
   const {
     songContextState: { deviceId },
     dispatchSongAction,
   } = useSongContext();
+
   const playSong = async () => {
     if (!deviceId) return;
     dispatchSongAction({
@@ -48,6 +51,7 @@ const Song = ({ item: { track }, itemIndex }: Props) => {
             alt="track cover"
             height="40"
             width="40"
+            className="hidden md:block "
           />
         </div>
         <div>
