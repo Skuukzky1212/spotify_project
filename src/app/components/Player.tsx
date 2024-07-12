@@ -20,6 +20,7 @@ const Player = () => {
     songContextState: { isPlaying, selectedSong, deviceId, volume },
     dispatchSongAction,
   } = useSongContext();
+
   const handlePlayPause = async () => {
     // fetching here!!!
     const response = await spotifyApi.getMyCurrentPlaybackState();
@@ -38,30 +39,35 @@ const Player = () => {
       });
     }
   };
+
   const handleSkipSong = async (skipTo: "previous" | "next") => {
     if (!deviceId) return;
-    if (skipTo === "previous") {
-      await spotifyApi.skipToPrevious();
-    } else {
-      await spotifyApi.skipToNext();
-    }
+
+    if (skipTo === "previous") await spotifyApi.skipToPrevious();
+    else await spotifyApi.skipToNext();
+
+    // Introduce a delay to give the Spotify API time to update the track
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
     const songInfo = await spotifyApi.getMyCurrentPlayingTrack();
-    console.log('songInfo:', songInfo); 
-    if (!songInfo) return;
+
+    if (!songInfo.body) return;
 
     dispatchSongAction({
-			type: SongReducerActionType.SetCurrentPlayingSong,
-			payload: {
-				selectedSongId: songInfo.body.item?.id,
-				selectedSong: songInfo.body.item as SpotifyApi.TrackObjectFull,
-				isPlaying: songInfo.body.is_playing
-			}
-		})
+      type: SongReducerActionType.SetCurrentPlayingSong,
+      payload: {
+        selectedSongId: songInfo.body.item?.id,
+        selectedSong: songInfo.body.item as SpotifyApi.TrackObjectFull,
+        isPlaying: songInfo.body.is_playing,
+      },
+    });
   };
+
   // debounce when user change volume
   const debounceAdjustVolume = useDebouncedCallback((volume: number) => {
     spotifyApi.setVolume(volume);
   }, 500);
+
   const handleVolumeChange: ChangeEventHandler<HTMLInputElement> = (event) => {
     const volume = Number(event.target.value);
     if (!deviceId) return;
@@ -72,7 +78,7 @@ const Player = () => {
     });
   };
   return (
-    <div className="h-24 bg-gradient-to-b from-black to-gray-900 grid grid-cols-3 text-xs md:text-base px-2 md:px-8">
+    <div className="h-24 bg-gradient-to-b from-black to-gray-900 grid grid-cols-2 md:grid-cols-3 text-xs md:text-base px-2 md:px-8">
       {/* Left */}
       <div className="flex items-center space-x-4">
         {selectedSong && (
@@ -111,7 +117,7 @@ const Player = () => {
         <ArrowUturnLeftIcon className="icon-playback" />
       </div>
       {/* Right */}
-      <div className="flex justify-end items-center pr-5 space-x-3 md:space-x-4">
+      <div className="justify-end items-center pr-5 space-x-3 md:space-x-4 hidden md:flex ">
         <SpeakerWaveIcon className="icon-playback" />
         <input
           type="range"

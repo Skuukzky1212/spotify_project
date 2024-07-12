@@ -5,7 +5,7 @@ import spotifyLogo from "../assets/spotify-logo.png";
 
 export default async function Login() {
   const providers = await getProviders();
-  const { name: providerName, id: providerId } = providers?.spotify as ClientSafeProvider;
+  const { id: providerId } = providers?.spotify as ClientSafeProvider;
   if (!providers) {
     return <div>Sign in is not available</div>;
   }
@@ -14,7 +14,7 @@ export default async function Login() {
       <div className="mb-6">
         <Image src={spotifyLogo} alt="Spotify logo" width="200" height="200" />
       </div>
-      <SignIn providerName={providerName} providerId={providerId} />
+      <SignIn providerId={providerId} />
     </div>
   );
 }
