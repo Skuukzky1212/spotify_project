@@ -1,10 +1,13 @@
 "use client";
 import { BuiltInProviderType } from "next-auth/providers/index";
 import { LiteralUnion, signIn } from "next-auth/react";
-interface providers {
+
+interface Providers {
   providerId: LiteralUnion<BuiltInProviderType, string>;
+  providerName: string;
 }
-const SignIn = ({ providerId }: providers) => {
+
+const SignIn = ({ providerId, providerName }: Providers) => {
   return (
     <button
       className="text-[16px] font-[500] bg-[#18d860] border-2 border-[transparent] text-white px-5 py-4 rounded-full hover:border-white transition-all"
@@ -12,7 +15,7 @@ const SignIn = ({ providerId }: providers) => {
         signIn(providerId, { callbackUrl: "/" });
       }}
     >
-      Login with Spotify!
+      Login with {providerName ? providerName : ""}!
     </button>
   );
 };
